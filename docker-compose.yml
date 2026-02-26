@@ -1,6 +1,7 @@
 version: "3.8"
 services:
     nginx:
+        container_name: auto-service_nginx
         image: nginx:latest
         ports:
             - "8183:80"
@@ -24,9 +25,13 @@ services:
         networks:
             - auto-service-internal
         # command: sh -c "composer install"
-        #command: ["sh", "-c", "composer install && php artisan migrate && chmod 775 . -R && chown www-data:www-data . -R && npm i && npm run build"]
+        #command: ["sh", "-c", "composer install && php artisan migrate && chmod 775 . -R && chown www-data:www-data . -R && npm i && npm run build && php artisan reverb:start"]
         extra_hosts:
             - "host.docker.internal:host-gateway"
+        ports:
+            - "8080:8080" # <- make sure to expose reverb port
+        # env_file:
+            # - .env
 
 networks:
     auto-service-internal:
