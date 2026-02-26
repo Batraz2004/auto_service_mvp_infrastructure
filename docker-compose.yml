@@ -1,0 +1,33 @@
+version: "3.8"
+services:
+    nginx:
+        image: nginx:latest
+        ports:
+            - "8183:80"
+        volumes:
+            - ./auto-service/:/var/www/auto-service
+            - ./nginx/conf.d/:/etc/nginx/conf.d/
+            - ./logs/nginx:/var/log/nginx
+        depends_on:
+            - php
+        networks:
+            - auto-service-internal
+    php:
+        # image: php:8.4-fpm
+        container_name: auto-service_php
+        build:
+            context: .
+            dockerfile: ./php/Dockerfile
+        volumes:
+            - ./auto-service:/var/www/auto-service
+        #   - ./php/php.ini:/usr/local/etc/php/conf.d/php.ini ты это уже делаешь в dockerfile
+        networks:
+            - auto-service-internal
+        # command: sh -c "composer install"
+        #command: ["sh", "-c", "composer install && php artisan migrate && chmod 775 . -R && chown www-data:www-data . -R && npm i && npm run build"]
+        extra_hosts:
+            - "host.docker.internal:host-gateway"
+
+networks:
+    auto-service-internal:
+        driver: bridge
