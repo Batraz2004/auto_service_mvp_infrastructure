@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y \
       zip unzip \
       git \
       libicu-dev \
-      && docker-php-ext-install pdo_mysql bcmath gd zip intl exif \
+      && docker-php-ext-install pdo_mysql bcmath gd zip intl exif pcntl\
       && apt-get clean \
       && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
